@@ -2,8 +2,8 @@ import { IAppointmentAction, ActionsTypes } from "./actions";
 import { IAppointment, ActiveAppointment } from "../../shared/interfaces/appointment.interface";
 
 export interface IInitialState {
-    allAppointmnets: IAppointment | [],
-    ActiveAppointments: ActiveAppointment | []
+    allAppointmnets: IAppointment[] | [],
+    activeAppointments: ActiveAppointment[] | []
 }
 
 export default function reducer(
