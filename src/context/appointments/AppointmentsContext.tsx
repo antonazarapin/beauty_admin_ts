@@ -7,7 +7,7 @@ import useAppointmentService from "../../services/AppointmentServices";
 
 
 const initialState: IInitialState = {
-    allAppointmnets: [],
+    allAppointments: [],
     activeAppointments: []
 }
 
@@ -16,13 +16,15 @@ interface ProviderProps {
 }
 
 interface AppointmentContextValue extends IInitialState {
-    getAppointments: () => void
+    getAppointments: () => void,
+    getActiveAppointments: () => void
 }
 
 export const AppointmentContext = createContext<AppointmentContextValue>({
-    allAppointmnets: initialState.allAppointmnets,
+    allAppointments: initialState.allAppointments,
     activeAppointments: initialState.activeAppointments,
-    getAppointments: () => { }
+    getAppointments: () => { },
+    getActiveAppointments: () => { }
 });
 
 const AppointmentContextProvider = ({ children }: ProviderProps) => {
@@ -37,10 +39,13 @@ const AppointmentContextProvider = ({ children }: ProviderProps) => {
     // Хуки должны быть только внутри компонентов
 
     const value: AppointmentContextValue = {
-        allAppointmnets: state.allAppointmnets,
+        allAppointments: state.allAppointments,
         activeAppointments: state.activeAppointments,
         getAppointments: () => {
             getAllAppointments().then(data => dispatch({ type: ActionsTypes.SET_ALL_APPOINTMENTS, payload: data }));
+        },
+        getActiveAppointments: () => {
+            getAllActiveAppointments().then(data => dispatch({ type: ActionsTypes.SET_ACTIVE_APPOINTMENTS, payload: data }))
         }
     }
 

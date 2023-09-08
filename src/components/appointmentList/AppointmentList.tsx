@@ -4,19 +4,17 @@ import AppointmentItem from "../appointmentItem.tsx/AppointmentItem";
 import { AppointmentContext } from "../../context/appointments/AppointmentsContext";
 
 function AppointmentList() {
-	const { allAppointmnets, getAppointments } = useContext(AppointmentContext);
+	const { getActiveAppointments, activeAppointments } = useContext(AppointmentContext);
 
 	useEffect(() => {
-		getAppointments()
+		getActiveAppointments();
 	}, [])
 
 	return (
 		<>
-			{allAppointmnets[0] ? allAppointmnets[0].name : console.log('dont have')}
-			<AppointmentItem />
-			<AppointmentItem />
-			<AppointmentItem />
-			<AppointmentItem />
+			{activeAppointments.map((item) => {
+				return <AppointmentItem {...item} key={item.id} />
+			})}
 		</>
 	);
 }
