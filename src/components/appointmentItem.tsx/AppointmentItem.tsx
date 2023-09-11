@@ -2,10 +2,27 @@ import { useEffect, useState } from "react";
 
 import "./appointmentItem.scss";
 import dayjs from "dayjs";
+import { Optional } from "utility-types";
 
-import { ActiveAppointment } from "../../shared/interfaces/appointment.interface";
+import { IAppointment } from "../../shared/interfaces/appointment.interface";
 
-function AppointmentItem({ id, date, name, service, phone }: ActiveAppointment) {
+
+type AppointmentProps = Optional<IAppointment, 'canceled'> & {
+	openModal: (state: boolean) => void,
+	selectId: () => void
+};
+
+function AppointmentItem({
+	id,
+	date,
+	name,
+	service,
+	phone,
+	canceled,
+	openModal,
+	selectId
+}: AppointmentProps) {
+
 	const [timeLeft, changeTimeLeft] = useState<string | null>(null);
 
 	useEffect(() => {
@@ -31,12 +48,26 @@ function AppointmentItem({ id, date, name, service, phone }: ActiveAppointment) 
 				<span className="appointment__service">Service: {service}</span>
 				<span className="appointment__phone">Phone: {phone}</span>
 			</div>
-			<div className="appointment__time">
-				<span>Time left:</span>
-				<span className="appointment__timer">{timeLeft}</span>
-			</div>
-			<button className="appointment__cancel">Cancel</button>
-			{/* <div className="appointment__canceled">Canceled</div> */}
+
+			{!canceled ? (
+				<>
+					<div className="appointment__time">
+						<span>Time left:</span>
+						<span className="appointment__timer">{timeLeft}</span>
+					</div>
+					<button
+						className="appointment__cancel"
+						onClick={() => {
+							openModal(true)
+							selectId()
+						}}>
+						Cancel
+					</button>
+				</>
+			) : null}
+			{canceled ? (
+				<div className="appointment__canceled">Canceled</div>
+			) : null}
 		</div>
 	);
 }
