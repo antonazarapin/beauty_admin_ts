@@ -1,4 +1,5 @@
-import { useContext, useEffect, useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useContext, useEffect, useState, useCallback } from "react";
 
 import AppointmentItem from "../appointmentItem.tsx/AppointmentItem";
 import { AppointmentContext } from "../../context/appointments/AppointmentsContext";
@@ -18,6 +19,11 @@ function AppointmentList() {
 
 	useEffect(() => {
 		getActiveAppointments();
+	}, [])
+
+	const handleOpenModal = useCallback((id: number) => {
+		setIsOpen(true);
+		selectId(id);
 	}, [])
 
 	if (appointmentLoadindStatus === 'loading') {
@@ -40,8 +46,8 @@ function AppointmentList() {
 				return <AppointmentItem
 					{...item}
 					key={item.id}
-					openModal={setIsOpen}
-					selectId={() => selectId(item.id)} />
+					openModal={handleOpenModal}
+				/>
 			})}
 
 			<CancelModal

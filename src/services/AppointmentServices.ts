@@ -45,10 +45,19 @@ const useAppointmentService = () => {
         return transformed;
     }
 
+    const calcelOneAppointment = async (id: number) => {
+        return await request({
+            url: `${_apiBase}/${id}`,
+            method: 'PATCH',
+            body: JSON.stringify({ canceled: true })
+        })
+    }
+
     return {
         loadingStatus,
         getAllAppointments,
-        getAllActiveAppointments
+        getAllActiveAppointments,
+        calcelOneAppointment
     }
 }
 
