@@ -18,7 +18,7 @@ function CancelModal({ handleClose, selectedId, isOpen }: IModalProps) {
 	const nodeRef = useRef<HTMLDivElement>(null);
 	// используйте всегда максимально специфичный тип элемента
 
-	const { calcelOneAppointment } = useAppointmentService();
+	const { cancelOneAppointment } = useAppointmentService();
 	const { getActiveAppointments } = useContext(AppointmentContext);
 
 	const [btnDisabled, setBtnDisabled] = useState<boolean>(false)
@@ -26,13 +26,11 @@ function CancelModal({ handleClose, selectedId, isOpen }: IModalProps) {
 
 	const handleCancelAppointment = (id: number) => {
 		setBtnDisabled(true);
-		calcelOneAppointment(id)
+		cancelOneAppointment(id)
 			.then(() => {
-				console.log('done');
 				setCancelStatus(true);
 			})
 			.catch(() => {
-				console.log('error');
 				setCancelStatus(false);
 				setBtnDisabled(false);
 			})
@@ -57,6 +55,9 @@ function CancelModal({ handleClose, selectedId, isOpen }: IModalProps) {
 	const closeOnEscapeKey = (e: KeyboardEvent) => {
 		if (e.key === 'Escape') {
 			closeModal();
+			if (cancelStatus) {
+				getActiveAppointments()
+			}
 		}
 	}
 	useEffect(() => {
@@ -65,7 +66,7 @@ function CancelModal({ handleClose, selectedId, isOpen }: IModalProps) {
 		return () => {
 			document.body.removeEventListener('keydown', closeOnEscapeKey);
 		}
-	}, [handleClose])
+	}, [handleClose, cancelStatus])
 
 	return (
 		<Portal>

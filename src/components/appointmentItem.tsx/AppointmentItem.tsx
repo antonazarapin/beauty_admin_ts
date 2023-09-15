@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState, memo } from "react";
 
 import "./appointmentItem.scss";
@@ -8,7 +9,8 @@ import { IAppointment } from "../../shared/interfaces/appointment.interface";
 
 
 type AppointmentProps = Optional<IAppointment, 'canceled'> & {
-	openModal: (state: number) => void
+	openModal: (state: number) => void,
+	getActiveAppointments: () => void
 };
 
 const AppointmentItem = memo(
@@ -19,17 +21,44 @@ const AppointmentItem = memo(
 		service,
 		phone,
 		canceled,
-		openModal
+		openModal,
+		getActiveAppointments
 	}: AppointmentProps) => {
 
 		const [timeLeft, changeTimeLeft] = useState<string | null>(null);
 
+		const formattedHoursDiff = () => {
+			const hoursDiff = dayjs(date).diff(undefined, 'h');
+
+			if (hoursDiff >= 24) {
+				const daysDiff = Math.floor(hoursDiff / 24);
+				return `${daysDiff}d ${hoursDiff % 24 < 10 ? `0${hoursDiff % 24}` : hoursDiff % 24}`;
+			}
+
+			return hoursDiff < 10 ? `0${hoursDiff}` : `${hoursDiff}`;
+		}
+
+		const formattedMinutesDiff = () => {
+			const minutesDiff = dayjs(date).diff(undefined, 'm') % 60;
+			const result = minutesDiff < 10 ? `0${minutesDiff}` : minutesDiff;
+			return result;
+		}
+
 		useEffect(() => {
-			changeTimeLeft(`${dayjs(date).diff(undefined, 'h')}:${dayjs(date).diff(undefined, 'm') % 60}`);
+			changeTimeLeft(`${formattedHoursDiff()}:${formattedMinutesDiff()}`);
 			// деление и получение остатка
 
 			const intervalId = setInterval(() => {
-				changeTimeLeft(`${dayjs(date).diff(undefined, 'h')}:${dayjs(date).diff(undefined, 'm') % 60}`);
+				if (dayjs(date).diff(undefined, 'm') <= 0) {
+
+					if (getActiveAppointments) {
+						getActiveAppointments();
+						clearInterval(intervalId);
+
+					}
+				} else {
+					changeTimeLeft(`${formattedHoursDiff()}:${formattedMinutesDiff()}`);
+				}
 			}, 60000);
 
 			return () => {
@@ -38,6 +67,7 @@ const AppointmentItem = memo(
 		}, [date])
 
 		const formattedDate = dayjs(date).format('DD/MM/YYYY HH:mm');
+
 
 		return (
 			<div className="appointment">
@@ -52,7 +82,10 @@ const AppointmentItem = memo(
 					<>
 						<div className="appointment__time">
 							<span>Time left:</span>
-							<span className="appointment__timer">{timeLeft}</span>
+							<span
+								className="appointment__timer"
+								style={timeLeft && timeLeft.length > 9 ? { fontSize: '23px' } : {}}
+							>{timeLeft}</span>
 						</div>
 						<button
 							className="appointment__cancel"
