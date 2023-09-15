@@ -1,6 +1,5 @@
 import "./caform.scss";
 
-import dayjs from "dayjs";
 import useAppointmentService from "../../services/AppointmentServices";
 import { IAppointment } from "../../shared/interfaces/appointment.interface";
 import { useState, FormEvent, ChangeEvent, useContext, } from "react";
