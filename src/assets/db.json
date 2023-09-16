@@ -63,6 +63,14 @@
       "date": "2023-12-11T12:30",
       "canceled": true,
       "id": 1694790057837
+    },
+    {
+      "name": "thor",
+      "service": "haircut",
+      "phone": "+1 900 788 655",
+      "date": "2023-12-11T13:30",
+      "canceled": false,
+      "id": 1694860715621
     }
   ]
 }

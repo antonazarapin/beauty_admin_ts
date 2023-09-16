@@ -11,7 +11,7 @@ function AppointmentList() {
 	const {
 		getActiveAppointments,
 		activeAppointments,
-		appointmentLoadindStatus
+		appointmentLoadingStatus
 	} = useContext(AppointmentContext);
 
 	const [isOpen, setIsOpen] = useState(false);
@@ -26,9 +26,9 @@ function AppointmentList() {
 		selectId(id);
 	}, [])
 
-	if (appointmentLoadindStatus === 'loading') {
+	if (appointmentLoadingStatus === 'loading') {
 		return <Spinner />
-	} else if (appointmentLoadindStatus === 'error') {
+	} else if (appointmentLoadingStatus === 'error') {
 		return (
 			<>
 				<Error />
@@ -42,14 +42,24 @@ function AppointmentList() {
 
 	return (
 		<>
-			{activeAppointments.map((item) => {
-				return <AppointmentItem
-					{...item}
-					key={item.id}
-					openModal={handleOpenModal}
-					getActiveAppointments={getActiveAppointments}
-				/>
-			})}
+			{activeAppointments
+				.sort(function (a, b) {
+					if (a.date > b.date) {
+						return 1;
+					}
+					if (a.date < b.date) {
+						return -1;
+					}
+					return 0;
+				})
+				.map((item) => {
+					return <AppointmentItem
+						{...item}
+						key={item.id}
+						openModal={handleOpenModal}
+						getAppointments={getActiveAppointments}
+					/>
+				})}
 
 			<CancelModal
 				handleClose={setIsOpen}
