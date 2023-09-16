@@ -10,12 +10,13 @@ function HistoryList() {
 	const {
 		getAppointments,
 		allAppointments,
-		appointmentLoadingStatus
+		appointmentLoadingStatus,
+		calendarDate
 	} = useContext(AppointmentContext);
 
 	useEffect(() => {
 		getAppointments()
-	}, []);
+	}, [calendarDate]);
 
 	if (appointmentLoadingStatus === 'loading') {
 		return <Spinner />
@@ -34,15 +35,6 @@ function HistoryList() {
 	return (
 		<>
 			{allAppointments
-				.sort(function (a, b) {
-					if (a.date > b.date) {
-						return 1;
-					}
-					if (a.date < b.date) {
-						return -1;
-					}
-					return 0;
-				})
 				.map((item) => {
 					return <AppointmentItem
 						{...item}

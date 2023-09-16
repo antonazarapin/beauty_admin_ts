@@ -3,4 +3,27 @@
 	height: 272px;
 	background-color: #fff;
 	box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.25);
+
+	.react-calendar {
+		&__tile--now {
+			background: #f9e0d7;
+
+			&:enabled:hover {
+				background: #EBBBAB;
+				color: #fff;
+			}
+		}
+
+		&__tile--active {
+			background: #EBBBAB;
+
+			&:enabled:hover {
+				background: #EBBBAB;
+			}
+
+			&:enabled:focus {
+				background: #EBBBAB;
+			}
+		}
+	}
 }

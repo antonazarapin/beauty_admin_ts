@@ -11,7 +11,8 @@ function AppointmentList() {
 	const {
 		getActiveAppointments,
 		activeAppointments,
-		appointmentLoadingStatus
+		appointmentLoadingStatus,
+		calendarDate
 	} = useContext(AppointmentContext);
 
 	const [isOpen, setIsOpen] = useState(false);
@@ -19,7 +20,7 @@ function AppointmentList() {
 
 	useEffect(() => {
 		getActiveAppointments();
-	}, [])
+	}, [calendarDate])
 
 	const handleOpenModal = useCallback((id: number) => {
 		setIsOpen(true);
@@ -43,15 +44,6 @@ function AppointmentList() {
 	return (
 		<>
 			{activeAppointments
-				.sort(function (a, b) {
-					if (a.date > b.date) {
-						return 1;
-					}
-					if (a.date < b.date) {
-						return -1;
-					}
-					return 0;
-				})
 				.map((item) => {
 					return <AppointmentItem
 						{...item}
